@@ -41,7 +41,7 @@ function Watch() {
     if (!data || !confirm("Delete this video?")) return;
     await supabase.storage.from(BUCKET).remove([data.video_path, data.thumbnail_path ?? ""].filter(Boolean));
     const { error } = await supabase.from("videos").delete().eq("id", data.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Video deleted");
     navigate({ to: "/" });
   };

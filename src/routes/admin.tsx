@@ -35,7 +35,7 @@ function AdminAuth() {
     if (mode === "in") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       navigate({ to: "/upload" });
     } else {
       const { data, error } = await supabase.auth.signUp({
@@ -44,7 +44,7 @@ function AdminAuth() {
         options: { emailRedirectTo: `${window.location.origin}/upload` },
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       if (data.session) navigate({ to: "/upload" });
       else toast.success("Check your email to confirm your account.");
     }
