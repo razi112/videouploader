@@ -35,6 +35,7 @@ export type Database = {
       videos: {
         Row: {
           created_at: string
+          description: string | null
           id: string
           thumbnail_path: string | null
           title: string
@@ -42,6 +43,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: string
           thumbnail_path?: string | null
           title: string
@@ -49,6 +51,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
           thumbnail_path?: string | null
           title?: string

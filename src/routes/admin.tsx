@@ -23,7 +23,6 @@ export const Route = createFileRoute("/admin")({
 });
 
 function AdminAuth() {
-  const [mode, setMode] = useState<"in" | "up">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -32,32 +31,18 @@ function AdminAuth() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    if (mode === "in") {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      setBusy(false);
-      if (error) { toast.error(error.message); return; }
-      navigate({ to: "/upload" });
-    } else {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: `${window.location.origin}/upload` },
-      });
-      setBusy(false);
-      if (error) { toast.error(error.message); return; }
-      if (data.session) navigate({ to: "/upload" });
-      else toast.success("Check your email to confirm your account.");
-    }
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setBusy(false);
+    if (error) { toast.error(error.message); return; }
+    navigate({ to: "/upload" });
   };
 
   return (
     <div className="min-h-screen">
       <SiteHeader />
       <main className="mx-auto max-w-sm px-4 py-16">
-        <h1 className="text-3xl font-bold">{mode === "in" ? "Admin sign in" : "Create admin account"}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {mode === "in" ? "Sign in to upload videos." : "The first account created becomes the admin."}
-        </p>
+        <h1 className="text-3xl font-bold">Admin sign in</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Sign in to upload videos.</p>
         <form onSubmit={submit} className="mt-8 space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -68,16 +53,9 @@ function AdminAuth() {
             <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <Button type="submit" className="w-full" disabled={busy}>
-            {busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create account"}
+            {busy ? "Please wait…" : "Sign in"}
           </Button>
         </form>
-        <button
-          type="button"
-          onClick={() => setMode(mode === "in" ? "up" : "in")}
-          className="mt-4 text-sm text-muted-foreground underline-offset-4 hover:underline"
-        >
-          {mode === "in" ? "First time? Create the admin account" : "Already have an account? Sign in"}
-        </button>
       </main>
     </div>
   );
